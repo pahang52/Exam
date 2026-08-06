@@ -297,17 +297,46 @@ function buildSheet(){
 /* ---------- خروجی‌ها ---------- */
 function openModal(){buildSheet();$('modal').classList.add('open');}
 function closeModal(){$('modal').classList.remove('open');}
-function exportPDF(){openModal();setTimeout(()=>{
- html2pdf().set({margin:[8,8,8,8],filename:fname()+'.pdf',
-  image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#fff'},
-  jsPDF:{unit:'mm',format:'a4'},pagebreak:{mode:['css','legacy'],avoid:['.q','table.info','table.match']}})
- .from($('sheet')).save();},400);}
-function exportWord(){buildSheet();
- const html=`<html dir="rtl" lang="fa"><head><meta charset="utf-8">
- <style>${document.getElementById('sheetcss').textContent} body{padding:20px}</style></head>
- <body>${$('sheet').innerHTML}</body></html>`;
- download(new Blob(['\ufeff',html],{type:'application/msword'}),fname()+'.doc');}
-function printSheet(){openModal();setTimeout(()=>window.print(),300);}
+function exportPDF(){
+  openModal();
+  setTimeout(()=>{
+    html2pdf().set({
+      margin:[8,8,8,8], filename:fname()+'.pdf',
+      image:{type:'jpeg',quality:.98},
+      html2canvas:{scale:2,useCORS:true,backgroundColor:'#fff'},
+      jsPDF:{unit:'mm',format:'a4'},
+      pagebreak:{mode:['css','legacy'],avoid:['.q','table.info','table.match']}
+    }).from($('sheet')).toPdf().get('pdf').then(function(pdf){
+      if(window.Android && window.Android.downloadBase64){
+        const b64 = pdf.output('datauristring').split(',')[1];
+        window.Android.downloadBase64(b64, fname()+'.pdf', 'application/pdf');
+      } else {
+        pdf.save(fname()+'.pdf');
+      }
+    });
+  }, 500);
+}
+function exportWord(){
+  buildSheet();
+  const html = `<html dir="rtl" lang="fa"><head><meta charset="utf-8">
+   <style>${document.getElementById('sheetcss').textContent} body{padding:20px;font-family:Tahoma}</style></head>
+   <body>${$('sheet').innerHTML}</body></html>`;
+  if(window.Android && window.Android.downloadBase64){
+    const b64 = btoa(unescape(encodeURIComponent(html)));
+    window.Android.downloadBase64(b64, fname()+'.doc', 'application/msword');
+  } else {
+    download(new Blob(['\ufeff',html],{type:'application/msword'}), fname()+'.doc');
+  }
+}
+function printSheet(){
+  buildSheet();
+  if(window.Android && window.Android.doPrint){
+    setTimeout(()=>window.Android.doPrint(), 300);
+  } else {
+    openModal();
+    setTimeout(()=>window.print(), 300);
+  }
+}
 
 /* ---------- شروع ---------- */
 window.addEventListener('DOMContentLoaded',()=>{

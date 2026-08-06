@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.ContentValues
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
 import android.webkit.JsResult
@@ -35,7 +36,6 @@ class MainActivity : Activity() {
 
         webView.webViewClient = WebViewClient()
 
-        // ✅ حل مشکل confirm/alert (حذف سوال)
         webView.webChromeClient = object : WebChromeClient() {
             override fun onJsConfirm(
                 view: WebView?, url: String?, message: String?, result: JsResult?
@@ -58,7 +58,6 @@ class MainActivity : Activity() {
             }
         }
 
-        // ✅ پل بین JS و اندروید (برای PDF/Word/Print)
         webView.addJavascriptInterface(AndroidBridge(), "Android")
 
         webView.loadUrl("file:///android_asset/index.html")
@@ -72,14 +71,19 @@ class MainActivity : Activity() {
                 val bytes = Base64.decode(b64, Base64.DEFAULT)
                 saveToDownloads(filename, mimeType, bytes)
                 runOnUiThread {
-                    Toast.makeText(this@MainActivity,
+                    Toast.makeText(
+                        this@MainActivity,
                         "✅ ذخیره شد: $filename (در پوشه Downloads)",
-                        Toast.LENGTH_LONG).show()
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             } catch (e: Exception) {
                 runOnUiThread {
-                    Toast.makeText(this@MainActivity,
-                        "خطا در ذخیره: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "خطا در ذخیره: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }

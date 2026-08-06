@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK (Offline)
 
 on:
   push:
@@ -10,11 +10,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: دانلود فایل‌های آفلاین (فونت + کتابخانه PDF)
+        run: |
+          set -e
+          cd app/src/main/assets
+          mkdir -p fonts
+          # کتابخانه ساخت PDF
+          curl -fL -o html2pdf.bundle.min.js \
+            https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js
+          # فونت وزیرمتن (وزن‌های موردنیاز)
+          for w in Regular Bold ExtraBold; do
+            curl -fL -o fonts/Vazirmatn-$w.woff2 \
+              https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-$w.woff2
+          done
+          ls -R .
+
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: "17" }
+
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: "8.7" }
+
       - run: gradle assembleDebug
+
       - uses: actions/upload-artifact@v4
         with:
           name: app-debug

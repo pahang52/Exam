@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>آزمون‌ساز</title>
+<link href="fonts/vazir.css" rel="stylesheet">
+<script src="html2pdf.bundle.min.js"></script>
+       
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Vazirmatn,Tahoma;background:#eef2ff;
+ background-image:radial-gradient(circle at 15% 20%,rgba(124,58,237,.14),transparent 40%),
+ radial-gradient(circle at 85% 80%,rgba(79,70,229,.14),transparent 40%)}
+header.top{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:16px 22px;
+ display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+ box-shadow:0 4px 24px rgba(79,70,229,.35)}
+header.top h1{margin:0;font-size:20px}
+header.top p{margin:2px 0 0;font-size:12px;opacity:.85}
+.btn-top{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.45);color:#fff;
+ padding:9px 16px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:13.5px;transition:.2s}
+.btn-top:hover{background:rgba(255,255,255,.3)}
+.container{max-width:960px;margin:20px auto;padding:0 14px}
+.card{background:#fff;border-radius:18px;box-shadow:0 8px 28px rgba(79,70,229,.09);padding:20px;margin-bottom:18px}
+h2{display:flex;align-items:center;gap:10px;font-size:16.5px;color:#312e81;margin:0 0 14px}
+.hint{font-size:11.5px;color:#94a3b8;font-weight:400}
+.total-chip{margin-inline-start:auto;font-size:12.5px;background:#fffbeb;color:#b45309;
+ padding:5px 14px;border-radius:20px;font-weight:700}
+label.fld{display:block;font-size:12.5px;font-weight:700;color:#64748b;margin-bottom:4px}
+input,select,textarea{font-family:inherit;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:10px;
+ font-size:14px;width:100%;background:#fff;transition:.2s}
+input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-shadow:0 0 0 3px rgba(124,58,237,.13)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:800px){.grid3{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.grid3{grid-template-columns:1fr}}
+.brow{display:flex;gap:12px;margin-bottom:12px}
+.brow>div{flex:1}
+.chip{display:inline-block;margin-top:8px;padding:8px 15px;background:#ede9fe;color:#5b21b6;border:none;
+ border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px}
+.mrow,.orow{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.mrow button,.orow button{border:none;background:#fee2e2;color:#b91c1c;border-radius:8px;
+ width:34px;height:36px;cursor:pointer;flex-shrink:0;font-size:14px}
+.arrow{color:#94a3b8}
+.mini{display:inline-flex;gap:6px;align-items:center;margin-top:8px;font-size:13px;color:#475569}
+.mini select{width:auto;padding:6px 10px}
+.btn.primary{width:100%;margin-top:12px;padding:13px;border:none;border-radius:12px;
+ background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-size:16px;font-family:inherit;
+ cursor:pointer;box-shadow:0 6px 18px rgba(124,58,237,.35);transition:.2s}
+.btn.primary:hover{transform:translateY(-1px)}
+.btn.cancel{display:none;width:100%;margin-top:6px;padding:9px;border:1.5px solid #e2e8f0;
+ border-radius:12px;background:#f8fafc;font-family:inherit;cursor:pointer;font-size:13px;color:#64748b}
+.qcard{border:1.5px solid #e2e8f0;border-radius:14px;padding:12px 14px;margin-bottom:10px;transition:.2s}
+.qcard:hover{border-color:#c7d2fe;box-shadow:0 4px 14px rgba(79,70,229,.1)}
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.b-tf{background:#dcfce7;color:#15803d}.b-blank{background:#fef3c7;color:#b45309}
+.b-match{background:#dbeafe;color:#1d4ed8}.b-mc{background:#ede9fe;color:#6d28d9}
+.b-short{background:#ccfbf1;color:#0f766e}.b-long{background:#ffe4e6;color:#be123c}
+.qscore{font-size:12.5px;font-weight:700;color:#b45309;background:#fffbeb;padding:3px 10px;border-radius:14px}
+.qtxt{font-size:13.5px;color:#334155;line-height:1.9}
+.qact{display:flex;gap:8px;margin-top:8px}
+.mini-btn{border:1px solid #e2e8f0;background:#f8fafc;border-radius:8px;padding:5px 12px;
+ font-family:inherit;font-size:12.5px;cursor:pointer}
+.mini-btn.del{color:#b91c1c;background:#fef2f2;border-color:#fecaca}
+.empty{text-align:center;color:#94a3b8;padding:26px}
+#modal{position:fixed;inset:0;background:rgba(30,27,75,.65);backdrop-filter:blur(4px);
+ display:none;flex-direction:column;z-index:50}
+#modal.open{display:flex}
+.toolbar{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;
+ background:#1e1b4b;color:#fff;flex-wrap:wrap;gap:8px;font-size:14px}
+.tbtn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;
+ padding:8px 14px;border-radius:9px;cursor:pointer;font-family:inherit;font-size:13px;margin-inline-start:6px}
+.tbtn:hover{background:rgba(255,255,255,.28)}
+.modal-body{flex:1;overflow:auto;padding:22px 12px}
+</style>
+
+<!-- استایل برگهٔ آزمون (برای PDF / Word / چاپ) -->
+<style id="sheetcss">
+#sheet{width:210mm;max-width:100%;min-height:297mm;margin:0 auto;background:#fff;padding:13mm;
+ box-sizing:border-box;box-shadow:0 10px 40px rgba(0,0,0,.25);font-size:13px;line-height:2;color:#1e293b}
+#sheet .bism{text-align:center;font-size:17px;margin-bottom:4px}
+#sheet .stitle{text-align:center;font-weight:800;font-size:15.5px;color:#312e81;border:2px solid #4f46e5;
+ border-radius:10px;padding:4px 18px;display:table;margin:4px auto 10px;background:#eef2ff}
+#sheet table.info{width:100%;border-collapse:collapse;margin-bottom:6px}
+#sheet table.info td{border:1.2px solid #64748b;padding:4px 8px;font-size:12px;width:33%}
+#sheet table.info .lbl{font-weight:700;color:#4338ca;white-space:nowrap}
+#sheet table.info .dots{color:#94a3b8}
+#sheet .scoreline{display:flex;justify-content:space-between;border:1.5px solid #64748b;border-radius:8px;
+ padding:3px 12px;margin-bottom:8px;font-size:12.5px;font-weight:700;background:#f8fafc}
+#sheet .sec-head{background:#4f46e5;color:#fff;border-radius:8px;padding:4px 12px;font-size:13px;
+ display:flex;gap:10px;align-items:baseline;margin-top:12px}
+#sheet .sec-head b{font-size:13.5px}
+#sheet .sec-head span{font-size:11px;opacity:.9}
+#sheet .q{padding:5px 2px;break-inside:avoid;page-break-inside:avoid}
+#sheet .qnum{font-weight:800;color:#4338ca}
+#sheet .score{color:#b45309;font-weight:700;font-size:11.5px}
+#sheet .box{display:inline-block;width:13px;height:13px;border:1.4px solid #334155;border-radius:3px;
+ vertical-align:middle;margin:0 4px 0 2px}
+#sheet .opts{display:grid;grid-template-columns:1fr 1fr;gap:2px 26px;margin:2px 22px 4px}
+#sheet .optl{font-weight:800;color:#4338ca}
+#sheet table.match{width:92%;margin:4px auto;border-collapse:collapse}
+#sheet table.match td{border:1.2px solid #64748b;padding:6px 10px;vertical-align:top;width:50%}
+#sheet .mcell{padding:2px 0;border-bottom:1px dashed #cbd5e1}
+#sheet .mcell:last-child{border-bottom:none}
+#sheet .aline{border-bottom:1.6px dotted #475569;height:26px;width:96%;margin:2px auto}
+#sheet .foot{text-align:center;color:#64748b;font-size:12px;margin-top:14px;
+ border-top:1px dashed #cbd5e1;padding-top:6px}
+@media print{
+ @page{size:A4;margin:10mm}
+ body>*:not(#modal){display:none!important}
+ #modal{display:block!important;position:static;background:none}
+ #modal .toolbar{display:none!important}
+ .modal-body{overflow:visible;padding:0}
+ #sheet{box-shadow:none;width:auto;min-height:0;margin:0;padding:0}
+}
+</style>
+</head>
+<body>
+
+<header class="top no-print">
+  <div><h1>📝 آزمون‌ساز</h1><p>طراحی حرفه‌ای برگهٔ امتحان با خروجی PDF ، Word و چاپ</p></div>
+  <div>
+    <button class="btn-top" onclick="openModal()">👁 پیش‌نمایش و خروجی</button>
+    <button class="btn-top" onclick="resetAll()">🗑 پاک‌کردن همه</button>
+  </div>
+</header>
+
+<div class="app container no-print">
+
+  <div class="card" id="info-card">
+    <h2>🏫 اطلاعات سربرگ <span class="hint">(همهٔ فیلدها اختیاری است)</span></h2>
+    <div class="grid3" id="info-grid"></div>
+  </div>
+
+  <div class="card" id="builder">
+    <h2>➕ طراحی سوال</h2>
+    <div class="brow">
+      <div><label class="fld">نوع سوال</label><select id="b-type" onchange="setBuilder()"></select></div>
+      <div><label class="fld">بارم (۰٫۲۵ تا ۱۰ نمره)</label><select id="b-score"></select></div>
+    </div>
+    <div id="builder-fields"></div>
+    <button id="btn-add" class="btn primary" onclick="addQuestion()">➕ افزودن سوال</button>
+    <button id="btn-cancel" class="btn cancel" onclick="cancelEdit()">انصراف از ویرایش</button>
+  </div>
+
+  <div class="card">
+    <h2>📋 سوالات طراحی‌شده
+      <span class="total-chip">مجموع بارم: <b id="total">۰</b> نمره</span></h2>
+    <div id="qlist"></div>
+  </div>
+
+</div>
+
+<div id="modal">
+  <div class="toolbar no-print">
+    <span>👁 پیش‌نمایش برگهٔ آزمون</span>
+    <div>
+      <button class="tbtn" onclick="exportPDF()">📄 دانلود PDF</button>
+      <button class="tbtn" onclick="exportWord()">📝 دانلود Word</button>
+      <button class="tbtn" onclick="printSheet()">🖨 چاپ</button>
+      <button class="tbtn" onclick="closeModal()">✕ بستن</button>
+    </div>
+  </div>
+  <div class="modal-body"><div id="sheet"></div></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const TYPES={tf:{name:'صحیح و غلط',icon:'⚖️'},blank:{name:'جاخالی',icon:'✏️'},
+ match:{name:'جورکردنی',icon:'🔗'},mc:{name:'تستی',icon:'🔘'},
+ short:{name:'پاسخ کوتاه',icon:'💬'},long:{name:'تشریحی',icon:'📝'}};
+const ORDER=['tf','blank','match','mc','short','long'];
+const SECDESC={tf:'درستی یا نادرستی هر عبارت را مشخص کنید.',
+ blank:'جاهای خالی را با کلمه یا عبارت مناسب کامل کنید.',
+ match:'موارد ستون راست را با گزینهٔ مناسب از ستون چپ مرتبط سازید.',
+ mc:'گزینهٔ صحیح را انتخاب کنید.',
+ short:'به هر سوال پاسخ کوتاه و کامل بدهید.',
+ long:'به هر سوال به‌صورت کامل و تشریحی پاسخ دهید.'};
+const INF=[['edu','اداره آموزش و پرورش شهرستان'],['school','دبیرستان'],
+ ['student','نام و نام خانوادگی دانش‌آموز'],['father','نام پدر'],['subject','نام درس'],
+ ['grade','پایه'],['term','نوبت امتحانی'],['date','تاریخ امتحان'],['teacher','دبیر']];
+const LET=['الف','ب','ج','د','هـ','و','ز','ح'];
+let questions=[],editingId=null;
+
+const faNum=s=>String(s).replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g,'٫');
+const fmt=n=>faNum(String(+n));
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function getInfo(){const o={};INF.forEach(([k])=>o[k]=$('i_'+k).value.trim());return o;}
+function save(){localStorage.setItem('quizmaker',JSON.stringify({info:getInfo(),questions}));}
+function load(){try{const d=JSON.parse(localStorage.getItem('quizmaker'));if(!d)return;
+ if(d.info)INF.forEach(([k])=>{if(d.info[k])$('i_'+k).value=d.info[k];});
+ questions=d.questions||[];}catch(e){}}
+function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();}
+const fname=()=>($('i_subject').value.trim()?('آزمون-'+$('i_subject').value.trim()):'آزمون');
+
+/* ---------- سوال‌ساز ---------- */
+function setBuilder(){
+ const t=$('b-type').value,f=$('builder-fields');let h='';
+ const ta=ph=>`<textarea id="b-text" rows="2" placeholder="${ph}"></textarea>`;
+ if(t==='tf')h=ta('متن عبارت را بنویسید…');
+ if(t==='blank')h=ta('متن جمله را بنویسید…')+`<button type="button" class="chip" onclick="insertBlank()">✏️ درج جای خالی در متن</button>`;
+ if(t==='match')h=`<div id="b-rows"></div><button type="button" class="chip" onclick="addRow()">➕ افزودن ردیف</button>`;
+ if(t==='mc')h=ta('متن سوال را بنویسید…')+`<div id="b-opts" style="margin-top:8px"></div><button type="button" class="chip" onclick="addOpt()">➕ افزودن گزینه</button>`;
+ if(t==='short'||t==='long'){h=ta('متن سوال را بنویسید…');
+  let o='';for(let i=1;i<=6;i++)o+=`<option ${i===(t==='long'?3:1)?'selected':''}>${faNum(i)}</option>`;
+  h+=`<label class="mini">تعداد خط پاسخ:<select id="b-lines">${o}</select></label>`;}
+ f.innerHTML=h;
+ if(t==='match'){addRow();addRow();addRow();}
+ if(t==='mc'){addOpt();addOpt();addOpt();addOpt();}
+}
+function insertBlank(){const t=$('b-text'),s=t.selectionStart||0;
+ t.value=t.value.slice(0,s)+' ……… '+t.value.slice(t.selectionEnd||s);t.focus();}
+function addRow(a,b){const d=document.createElement('div');d.className='mrow';
+ d.innerHTML=`<input class="m-r" placeholder="ستون راست (مثال: پایتخت ایران)"><span class="arrow">↔</span><input class="m-l" placeholder="ستون چپ (مثال: تهران)"><button type="button" onclick="this.parentNode.remove()">✕</button>`;
+ if(a)d.querySelector('.m-r').value=a;if(b)d.querySelector('.m-l').value=b;$('b-rows').appendChild(d);}
+function addOpt(v){if($('b-opts').children.length>=6)return alert('حداکثر ۶ گزینه');
+ const d=document.createElement('div');d.className='orow';
+ d.innerHTML=`<input placeholder="متن گزینه"><button type="button" onclick="this.parentNode.remove()">✕</button>`;
+ if(v)d.querySelector('input').value=v;$('b-opts').appendChild(d);}
+
+function addQuestion(){
+ const type=$('b-type').value,score=parseFloat($('b-score').value);
+ const q={id:editingId||Date.now(),type,score};
+ if(type==='mc'){q.text=$('b-text').value.trim();
+  q.options=[...document.querySelectorAll('#b-opts input')].map(i=>i.value.trim()).filter(Boolean);
+  if(!q.text||q.options.length<2)return alert('متن سوال و حداقل ۲ گزینه را وارد کنید');}
+ else if(type==='match'){
+  q.pairs=[...document.querySelectorAll('.mrow')].map(r=>[r.querySelector('.m-r').value.trim(),r.querySelector('.m-l').value.trim()]).filter(p=>p[0]&&p[1]);
+  if(q.pairs.length<2)return alert('حداقل ۲ جفت وارد کنید');
+  q.left=shuffle(q.pairs.map(p=>p[1]));}
+ else{q.text=$('b-text').value.trim();if(!q.text)return alert('متن سوال را وارد کنید');
+  if(type==='short'||type==='long')q.lines=parseInt($('b-lines').value.replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))||1;}
+ if(editingId){questions=questions.map(x=>x.id===editingId?q:x);}else questions.push(q);
+ cancelEdit();save();renderList();setBuilder();$('b-score').value='1';
+}
+function editQ(id){const q=questions.find(x=>x.id===id);if(!q)return;editingId=id;
+ $('b-type').value=q.type;setBuilder();
+ if(q.text)$('b-text').value=q.text;
+ if(q.type==='mc'){$('b-opts').innerHTML='';q.options.forEach(o=>addOpt(o));}
+ if(q.type==='match'){$('b-rows').innerHTML='';q.pairs.forEach(p=>addRow(p[0],p[1]));}
+ if(q.lines)$('b-lines').value=faNum(q.lines);
+ $('btn-add').textContent='💾 ذخیرهٔ تغییرات';$('btn-cancel').style.display='block';
+ $('builder').scrollIntoView({behavior:'smooth'});}
+function cancelEdit(){editingId=null;$('btn-add').textContent='➕ افزودن سوال';
+ $('btn-cancel').style.display='none';setBuilder();}
+function delQ(id){if(confirm('این سوال حذف شود؟')){questions=questions.filter(x=>x.id!==id);save();renderList();}}
+function resetAll(){if(confirm('همهٔ اطلاعات و سوالات پاک شود؟')){questions=[];
+ INF.forEach(([k])=>$('i_'+k).value='');save();renderList();}}
+
+/* ---------- لیست سوالات ---------- */
+function preview(q){if(q.type==='match')return q.pairs.length+' جفت — نمونه: '+q.pairs[0][0]+' ↔ '+q.pairs[0][1];
+ let t=q.text;if(q.type==='mc')t+=' ('+faNum(q.options.length)+' گزینه)';
+ if(q.lines)t+=' ('+faNum(q.lines)+' خط پاسخ)';return t.length>95?t.slice(0,95)+'…':t;}
+function renderList(){const el=$('qlist');
+ if(!questions.length){el.innerHTML='<div class="empty">هنوز سوالی طراحی نشده است 📭</div>';$('total').textContent='۰';return;}
+ el.innerHTML=questions.map(q=>`<div class="qcard">
+  <div class="qtop"><span class="badge b-${q.type}">${TYPES[q.type].icon} ${TYPES[q.type].name}</span>
+  <span class="qscore">${fmt(q.score)} نمره</span></div>
+  <div class="qtxt">${esc(preview(q))}</div>
+  <div class="qact"><button class="mini-btn" onclick="editQ(${q.id})">✏️ ویرایش</button>
+  <button class="mini-btn del" onclick="delQ(${q.id})">🗑 حذف</button></div></div>`).join('');
+ $('total').textContent=fmt(questions.reduce((s,q)=>s+q.score,0));}
+
+/* ---------- ساخت برگهٔ آزمون ---------- */
+function matchTable(q){return `<table class="match"><tr>
+ <td>${q.pairs.map((p,i)=>`<div class="mcell"><span class="optl">${faNum(i+1)})</span> ${esc(p[0])}</div>`).join('')}</td>
+ <td>${q.left.map((m,i)=>`<div class="mcell"><span class="optl">${LET[i]})</span> ${esc(m)}</div>`).join('')}</td></tr></table>`;}
+function renderQ(q,num){
+ const s=`<span class="score">(${fmt(q.score)} نمره)</span> `,n=`<span class="qnum">${faNum(num)})</span> `;
+ switch(q.type){
+  case 'tf':return n+esc(q.text)+` <span class="box"></span>صحیح <span class="box"></span>غلط `+s;
+  case 'blank':return n+esc(q.text)+' '+s;
+  case 'mc':return n+esc(q.text)+' '+s+`<div class="opts">${q.options.map((o,i)=>`<div><span class="optl">${LET[i]})</span> ${esc(o)}</div>`).join('')}</div>`;
+  case 'match':return n+s+matchTable(q);
+  case 'short':return n+esc(q.text)+' '+s+`<div class="aline"></div>`;
+  case 'long':return n+esc(q.text)+' '+s+`<div>${'<div class="aline"></div>'.repeat(q.lines||3)}</div>`;}}
+function buildSheet(){
+ const info=getInfo();let num=0,total=0,h='';
+ h+=`<div class="bism">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِیمِ</div>`;
+ let title='برگهٔ آزمون';
+ if(info.subject)title='آزمون '+info.subject+(info.grade?' — پایهٔ '+info.grade:'');
+ if(info.term)title+=' — '+info.term;
+ h+=`<div class="stitle">${title}</div><table class="info">`;
+ for(let r=0;r<3;r++){h+='<tr>';for(let c=0;c<3;c++){const[id,lbl]=INF[r*3+c],v=info[id];
+  h+=`<td><span class="lbl">${lbl}:</span> ${v?esc(v):'<span class="dots">...............</span>'}</td>`;}h+='</tr>';}
+ h+='</table>';
+ const grand=questions.reduce((s,q)=>s+q.score,0);
+ h+=`<div class="scoreline"><span>⚖️ مجموع بارم: ${fmt(grand)} نمره</span><span>نمرهٔ کسب‌شده: ....................</span></div>`;
+ if(!questions.length)h+='<div style="text-align:center;padding:30px;color:#94a3b8">هنوز سوالی طراحی نشده است.</div>';
+ ORDER.forEach(type=>{const qs=questions.filter(q=>q.type===type);if(!qs.length)return;
+  h+=`<div class="sec-head"><b>◆ ${TYPES[type].icon} ${TYPES[type].name}</b><span>${SECDESC[type]}</span></div>`;
+  qs.forEach(q=>{num++;total+=q.score;h+=`<div class="q">${renderQ(q,num)}</div>`;});});
+ h+='<div class="foot">با آرزوی موفقیت 🌱 — '+(info.teacher?('دبیر: '+esc(info.teacher)):'آزمون‌ساز')+'</div>';
+ $('sheet').innerHTML=h;return total;}
+
+/* ---------- خروجی‌ها ---------- */
+function openModal(){buildSheet();$('modal').classList.add('open');}
+function closeModal(){$('modal').classList.remove('open');}
+function exportPDF(){openModal();setTimeout(()=>{
+ html2pdf().set({margin:[8,8,8,8],filename:fname()+'.pdf',
+  image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#fff'},
+  jsPDF:{unit:'mm',format:'a4'},pagebreak:{mode:['css','legacy'],avoid:['.q','table.info','table.match']}})
+ .from($('sheet')).save();},400);}
+function exportWord(){buildSheet();
+ const html=`<html dir="rtl" lang="fa"><head><meta charset="utf-8">
+ <style>${document.getElementById('sheetcss').textContent} body{padding:20px}</style></head>
+ <body>${$('sheet').innerHTML}</body></html>`;
+ download(new Blob(['\ufeff',html],{type:'application/msword'}),fname()+'.doc');}
+function printSheet(){openModal();setTimeout(()=>window.print(),300);}
+
+/* ---------- شروع ---------- */
+window.addEventListener('DOMContentLoaded',()=>{
+ INF.forEach(([id,lbl])=>$('info-grid').insertAdjacentHTML('beforeend',
+  `<div><label class="fld">${lbl}</label><input id="i_${id}"></div>`));
+ ORDER.forEach(t=>$('b-type').insertAdjacentHTML('beforeend',
+  `<option value="${t}">${TYPES[t].icon} ${TYPES[t].name}</option>`));
+ for(let i=1;i<=40;i++){const s=i/4,o=document.createElement('option');
+  o.value=s;o.textContent=fmt(s)+' نمره';if(s===1)o.selected=true;$('b-score').appendChild(o);}
+ load();setBuilder();renderList();
+ document.querySelectorAll('#info-grid input').forEach(i=>i.addEventListener('input',save));});
+</script>
+</body>
+</html>

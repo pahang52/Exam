@@ -6,7 +6,7 @@
 <title>آزمون‌ساز</title>
 <link href="fonts/vazir.css" rel="stylesheet">
 <script src="html2pdf.bundle.min.js"></script>
-       
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;font-family:Vazirmatn,Tahoma;background:#eef2ff;
@@ -17,6 +17,8 @@ header.top{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding
  box-shadow:0 4px 24px rgba(79,70,229,.35)}
 header.top h1{margin:0;font-size:20px}
 header.top p{margin:2px 0 0;font-size:12px;opacity:.85}
+.hdr{display:flex;align-items:center;gap:12px}
+.app-logo{width:48px;height:48px;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,.3)}
 .btn-top{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.45);color:#fff;
  padding:9px 16px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:13.5px;transition:.2s}
 .btn-top:hover{background:rgba(255,255,255,.3)}
@@ -33,8 +35,8 @@ input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-sh
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(max-width:800px){.grid3{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.grid3{grid-template-columns:1fr}}
-.brow{display:flex;gap:12px;margin-bottom:12px}
-.brow>div{flex:1}
+.brow{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.brow>div{flex:1;min-width:140px}
 .chip{display:inline-block;margin-top:8px;padding:8px 15px;background:#ede9fe;color:#5b21b6;border:none;
  border-radius:20px;cursor:pointer;font-family:inherit;font-size:13px}
 .mrow,.orow{display:flex;gap:8px;margin-bottom:8px;align-items:center}
@@ -43,6 +45,7 @@ input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-sh
 .arrow{color:#94a3b8}
 .mini{display:inline-flex;gap:6px;align-items:center;margin-top:8px;font-size:13px;color:#475569}
 .mini select{width:auto;padding:6px 10px}
+.mini input[type=checkbox]{width:auto}
 .btn.primary{width:100%;margin-top:12px;padding:13px;border:none;border-radius:12px;
  background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-size:16px;font-family:inherit;
  cursor:pointer;box-shadow:0 6px 18px rgba(124,58,237,.35);transition:.2s}
@@ -56,6 +59,7 @@ input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-sh
 .b-tf{background:#dcfce7;color:#15803d}.b-blank{background:#fef3c7;color:#b45309}
 .b-match{background:#dbeafe;color:#1d4ed8}.b-mc{background:#ede9fe;color:#6d28d9}
 .b-short{background:#ccfbf1;color:#0f766e}.b-long{background:#ffe4e6;color:#be123c}
+.b-translate{background:#e0e7ff;color:#3730a3}.b-solve{background:#fef9c3;color:#854d0e}
 .qscore{font-size:12.5px;font-weight:700;color:#b45309;background:#fffbeb;padding:3px 10px;border-radius:14px}
 .qtxt{font-size:13.5px;color:#334155;line-height:1.9}
 .qact{display:flex;gap:8px;margin-top:8px}
@@ -72,9 +76,12 @@ input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-sh
  padding:8px 14px;border-radius:9px;cursor:pointer;font-family:inherit;font-size:13px;margin-inline-start:6px}
 .tbtn:hover{background:rgba(255,255,255,.28)}
 .modal-body{flex:1;overflow:auto;padding:22px 12px}
+.app-footer{text-align:center;padding:22px 14px 34px;color:#64748b;font-size:13px;
+ border-top:1px dashed #c7d2fe;margin-top:6px;line-height:1.9}
+.app-footer b{color:#4f46e5}
+.app-footer .deg{display:block;font-size:11.5px;color:#94a3b8}
 </style>
 
-<!-- استایل برگهٔ آزمون (برای PDF / Word / چاپ) -->
 <style id="sheetcss">
 #sheet{width:210mm;max-width:100%;min-height:297mm;margin:0 auto;background:#fff;padding:13mm;
  box-sizing:border-box;box-shadow:0 10px 40px rgba(0,0,0,.25);font-size:13px;line-height:2;color:#1e293b}
@@ -94,6 +101,7 @@ input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-sh
 #sheet .q{padding:5px 2px;break-inside:avoid;page-break-inside:avoid}
 #sheet .qnum{font-weight:800;color:#4338ca}
 #sheet .score{color:#b45309;font-weight:700;font-size:11.5px}
+#sheet .en{direction:ltr;unicode-bidi:embed;font-family:Vazirmatn,Tahoma}
 #sheet .box{display:inline-block;width:13px;height:13px;border:1.4px solid #334155;border-radius:3px;
  vertical-align:middle;margin:0 4px 0 2px}
 #sheet .opts{display:grid;grid-template-columns:1fr 1fr;gap:2px 26px;margin:2px 22px 4px}
@@ -118,7 +126,10 @@ input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-sh
 <body>
 
 <header class="top no-print">
-  <div><h1>📝 آزمون‌ساز</h1><p>طراحی حرفه‌ای برگهٔ امتحان با خروجی PDF ، Word و چاپ</p></div>
+  <div class="hdr">
+    <img src="logo.png" class="app-logo" alt="" onerror="this.style.display='none'">
+    <div><h1>📝 آزمون‌ساز</h1><p>طراحی حرفه‌ای برگهٔ امتحان با خروجی PDF ، Word و چاپ</p></div>
+  </div>
   <div>
     <button class="btn-top" onclick="openModal()">👁 پیش‌نمایش و خروجی</button>
     <button class="btn-top" onclick="resetAll()">🗑 پاک‌کردن همه</button>
@@ -135,8 +146,9 @@ input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-sh
   <div class="card" id="builder">
     <h2>➕ طراحی سوال</h2>
     <div class="brow">
+      <div><label class="fld">نوع آزمون</label><select id="b-mode" onchange="changeMode()"></select></div>
       <div><label class="fld">نوع سوال</label><select id="b-type" onchange="setBuilder()"></select></div>
-      <div><label class="fld">بارم (۰٫۲۵ تا ۱۰ نمره)</label><select id="b-score"></select></div>
+      <div><label class="fld">بارم (۰٫۲۵ تا ۰ نمره)</label><select id="b-score"></select></div>
     </div>
     <div id="builder-fields"></div>
     <button id="btn-add" class="btn primary" onclick="addQuestion()">➕ افزودن سوال</button>
@@ -148,7 +160,12 @@ input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-sh
       <span class="total-chip">مجموع بارم: <b id="total">۰</b> نمره</span></h2>
     <div id="qlist"></div>
   </div>
-  <footer class="app-footer">    طراحی و توسعه: <b>نیکزادفرد</b>    <span class="deg">کارشناسی ارشد جغرافیا و برنامه‌ریزی شهری</span>  </footer>
+
+  <footer class="app-footer">
+    طراحی و توسعه: <b>نیکزادفرد</b>
+    <span class="deg">کارشناسی ارشد جغرافیا و برنامه‌ریزی شهری</span>
+  </footer>
+
 </div>
 
 <div id="modal">
@@ -168,43 +185,55 @@ input:focus,select:focus,textarea:focus{border-color:#7c3aed;outline:none;box-sh
 const $=id=>document.getElementById(id);
 const TYPES={tf:{name:'صحیح و غلط',icon:'⚖️'},blank:{name:'جاخالی',icon:'✏️'},
  match:{name:'جورکردنی',icon:'🔗'},mc:{name:'تستی',icon:'🔘'},
- short:{name:'پاسخ کوتاه',icon:'💬'},long:{name:'تشریحی',icon:'📝'}};
-const ORDER=['tf','blank','match','mc','short','long'];
+ short:{name:'پاسخ کوتاه',icon:'💬'},long:{name:'تشریحی',icon:'📝'},
+ translate:{name:'ترجمهٔ جمله',icon:'🌐'},solve:{name:'حل کنید (محاسباتی)',icon:'🧮'}};
+const MODES={general:{name:'عمومی',icon:'📋',types:['tf','blank','match','mc','short','long']},
+ lang:{name:'زبان انگلیسی',icon:'🌐',types:['tf','blank','match','mc','translate','short']},
+ math:{name:'ریاضی',icon:'🧮',types:['tf','blank','mc','short','solve','long']}};
+const ORDER=['tf','blank','match','mc','translate','short','solve','long'];
 const SECDESC={tf:'درستی یا نادرستی هر عبارت را مشخص کنید.',
  blank:'جاهای خالی را با کلمه یا عبارت مناسب کامل کنید.',
  match:'موارد ستون راست را با گزینهٔ مناسب از ستون چپ مرتبط سازید.',
  mc:'گزینهٔ صحیح را انتخاب کنید.',
  short:'به هر سوال پاسخ کوتاه و کامل بدهید.',
- long:'به هر سوال به‌صورت کامل و تشریحی پاسخ دهید.'};
+ long:'به هر سوال به‌صورت کامل و تشریحی پاسخ دهید.',
+ translate:'جملهٔ زیر را ترجمه کنید.',
+ solve:'مسئله را با راه‌حل کامل حل کنید.'};
 const INF=[['edu','اداره آموزش و پرورش شهرستان'],['school','دبیرستان'],
  ['student','نام و نام خانوادگی دانش‌آموز'],['father','نام پدر'],['subject','نام درس'],
  ['grade','پایه'],['term','نوبت امتحانی'],['date','تاریخ امتحان'],['teacher','دبیر']];
 const LET=['الف','ب','ج','د','هـ','و','ز','ح'];
-let questions=[],editingId=null;
+let questions=[],editingId=null,curMode='general';
 
 const faNum=s=>String(s).replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g,'٫');
 const fmt=n=>faNum(String(+n));
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function getInfo(){const o={};INF.forEach(([k])=>o[k]=$('i_'+k).value.trim());return o;}
-function save(){localStorage.setItem('quizmaker',JSON.stringify({info:getInfo(),questions}));}
+function save(){localStorage.setItem('quizmaker',JSON.stringify({info:getInfo(),questions,mode:$('b-mode').value}));}
 function load(){try{const d=JSON.parse(localStorage.getItem('quizmaker'));if(!d)return;
  if(d.info)INF.forEach(([k])=>{if(d.info[k])$('i_'+k).value=d.info[k];});
- questions=d.questions||[];}catch(e){}}
+ questions=d.questions||[];if(d.mode&&MODES[d.mode])$('b-mode').value=d.mode;}catch(e){}}
 function download(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();}
 const fname=()=>($('i_subject').value.trim()?('آزمون-'+$('i_subject').value.trim()):'آزمون');
 
-/* ---------- سوال‌ساز ---------- */
+function typeOpts(){return MODES[$('b-mode').value].types.map(t=>`<option value="${t}">${TYPES[t].icon} ${TYPES[t].name}</option>`).join('');}
+function changeMode(){curMode=$('b-mode').value;$('b-type').innerHTML=typeOpts();setBuilder();save();}
+
 function setBuilder(){
- const t=$('b-type').value,f=$('builder-fields');let h='';
+ const t=$('b-type').value,m=$('b-mode').value,f=$('builder-fields');let h='';
  const ta=ph=>`<textarea id="b-text" rows="2" placeholder="${ph}"></textarea>`;
- if(t==='tf')h=ta('متن عبارت را بنویسید…');
- if(t==='blank')h=ta('متن جمله را بنویسید…')+`<button type="button" class="chip" onclick="insertBlank()">✏️ درج جای خالی در متن</button>`;
+ const ltrChk=c=>`<label class="mini"><input type="checkbox" id="b-ltr" ${c?'checked':''}> متن سوال انگلیسی (چپ‌چین)</label>`;
+ if(t==='tf')h=ta('متن عبارت را بنویسید…')+(m==='lang'?ltrChk(false):'');
+ if(t==='blank')h=ta('متن جمله را بنویسید…')+`<button type="button" class="chip" onclick="insertBlank()">✏️ درج جای خالی در متن</button>`+(m==='lang'?ltrChk(false):'');
  if(t==='match')h=`<div id="b-rows"></div><button type="button" class="chip" onclick="addRow()">➕ افزودن ردیف</button>`;
- if(t==='mc')h=ta('متن سوال را بنویسید…')+`<div id="b-opts" style="margin-top:8px"></div><button type="button" class="chip" onclick="addOpt()">➕ افزودن گزینه</button>`;
- if(t==='short'||t==='long'){h=ta('متن سوال را بنویسید…');
-  let o='';for(let i=1;i<=6;i++)o+=`<option ${i===(t==='long'?3:1)?'selected':''}>${faNum(i)}</option>`;
-  h+=`<label class="mini">تعداد خط پاسخ:<select id="b-lines">${o}</select></label>`;}
+ if(t==='mc')h=ta('متن سوال را بنویسید…')+`<div id="b-opts" style="margin-top:8px"></div><button type="button" class="chip" onclick="addOpt()">➕ افزودن گزینه</button>`+(m==='lang'?ltrChk(false):'');
+ if(['short','long','translate','solve'].includes(t)){
+  const def=t==='short'?1:t==='long'?3:t==='translate'?2:4;
+  h=ta(t==='translate'?'Write the English sentence…':'متن سوال را بنویسید…');
+  let o='';for(let i=1;i<=8;i++)o+=`<option ${i===def?'selected':''}>${faNum(i)}</option>`;
+  h+=`<label class="mini">تعداد خط پاسخ:<select id="b-lines">${o}</select></label>`;
+  if(t==='translate')h+=ltrChk(true);else if(m==='lang')h+=ltrChk(false);}
  f.innerHTML=h;
  if(t==='match'){addRow();addRow();addRow();}
  if(t==='mc'){addOpt();addOpt();addOpt();addOpt();}
@@ -230,7 +259,8 @@ function addQuestion(){
   if(q.pairs.length<2)return alert('حداقل ۲ جفت وارد کنید');
   q.left=shuffle(q.pairs.map(p=>p[1]));}
  else{q.text=$('b-text').value.trim();if(!q.text)return alert('متن سوال را وارد کنید');
-  if(type==='short'||type==='long')q.lines=parseInt($('b-lines').value.replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))||1;}
+  if(['short','long','translate','solve'].includes(type))q.lines=parseInt($('b-lines').value.replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))||1;}
+ const l=document.getElementById('b-ltr');if(l)q.ltr=l.checked;
  if(editingId){questions=questions.map(x=>x.id===editingId?q:x);}else questions.push(q);
  cancelEdit();save();renderList();setBuilder();$('b-score').value='1';
 }
@@ -240,6 +270,7 @@ function editQ(id){const q=questions.find(x=>x.id===id);if(!q)return;editingId=i
  if(q.type==='mc'){$('b-opts').innerHTML='';q.options.forEach(o=>addOpt(o));}
  if(q.type==='match'){$('b-rows').innerHTML='';q.pairs.forEach(p=>addRow(p[0],p[1]));}
  if(q.lines)$('b-lines').value=faNum(q.lines);
+ const l=document.getElementById('b-ltr');if(l)l.checked=!!q.ltr;
  $('btn-add').textContent='💾 ذخیرهٔ تغییرات';$('btn-cancel').style.display='block';
  $('builder').scrollIntoView({behavior:'smooth'});}
 function cancelEdit(){editingId=null;$('btn-add').textContent='➕ افزودن سوال';
@@ -248,7 +279,6 @@ function delQ(id){if(confirm('این سوال حذف شود؟')){questions=quest
 function resetAll(){if(confirm('همهٔ اطلاعات و سوالات پاک شود؟')){questions=[];
  INF.forEach(([k])=>$('i_'+k).value='');save();renderList();}}
 
-/* ---------- لیست سوالات ---------- */
 function preview(q){if(q.type==='match')return q.pairs.length+' جفت — نمونه: '+q.pairs[0][0]+' ↔ '+q.pairs[0][1];
  let t=q.text;if(q.type==='mc')t+=' ('+faNum(q.options.length)+' گزینه)';
  if(q.lines)t+=' ('+faNum(q.lines)+' خط پاسخ)';return t.length>95?t.slice(0,95)+'…':t;}
@@ -262,24 +292,29 @@ function renderList(){const el=$('qlist');
   <button class="mini-btn del" onclick="delQ(${q.id})">🗑 حذف</button></div></div>`).join('');
  $('total').textContent=fmt(questions.reduce((s,q)=>s+q.score,0));}
 
-/* ---------- ساخت برگهٔ آزمون ---------- */
 function matchTable(q){return `<table class="match"><tr>
  <td>${q.pairs.map((p,i)=>`<div class="mcell"><span class="optl">${faNum(i+1)})</span> ${esc(p[0])}</div>`).join('')}</td>
  <td>${q.left.map((m,i)=>`<div class="mcell"><span class="optl">${LET[i]})</span> ${esc(m)}</div>`).join('')}</td></tr></table>`;}
 function renderQ(q,num){
  const s=`<span class="score">(${fmt(q.score)} نمره)</span> `,n=`<span class="qnum">${faNum(num)})</span> `;
+ const T=q.ltr?`<span class="en">${esc(q.text)}</span>`:esc(q.text);
+ const lines=k=>`<div>${'<div class="aline"></div>'.repeat(k)}</div>`;
  switch(q.type){
-  case 'tf':return n+esc(q.text)+` <span class="box"></span>صحیح <span class="box"></span>غلط `+s;
-  case 'blank':return n+esc(q.text)+' '+s;
-  case 'mc':return n+esc(q.text)+' '+s+`<div class="opts">${q.options.map((o,i)=>`<div><span class="optl">${LET[i]})</span> ${esc(o)}</div>`).join('')}</div>`;
+  case 'tf':return n+T+` <span class="box"></span>صحیح <span class="box"></span>غلط `+s;
+  case 'blank':return n+T+' '+s;
+  case 'mc':return n+T+' '+s+`<div class="opts">${q.options.map((o,i)=>`<div><span class="optl">${LET[i]})</span> ${q.ltr?`<span class="en">${esc(o)}</span>`:esc(o)}</div>`).join('')}</div>`;
   case 'match':return n+s+matchTable(q);
-  case 'short':return n+esc(q.text)+' '+s+`<div class="aline"></div>`;
-  case 'long':return n+esc(q.text)+' '+s+`<div>${'<div class="aline"></div>'.repeat(q.lines||3)}</div>`;}}
+  case 'translate':return n+T+' '+s+lines(q.lines||2);
+  case 'short':return n+T+' '+s+lines(q.lines||1);
+  case 'solve':return n+T+' '+s+lines(q.lines||4);
+  case 'long':return n+T+' '+s+lines(q.lines||3);}}
 function buildSheet(){
  const info=getInfo();let num=0,total=0,h='';
  h+=`<div class="bism">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِیمِ</div>`;
  let title='برگهٔ آزمون';
  if(info.subject)title='آزمون '+info.subject+(info.grade?' — پایهٔ '+info.grade:'');
+ else if(curMode==='lang')title='آزمون زبان انگلیسی'+(info.grade?' — پایهٔ '+info.grade:'');
+ else if(curMode==='math')title='آزمون ریاضی'+(info.grade?' — پایهٔ '+info.grade:'');
  if(info.term)title+=' — '+info.term;
  h+=`<div class="stitle">${title}</div><table class="info">`;
  for(let r=0;r<3;r++){h+='<tr>';for(let c=0;c<3;c++){const[id,lbl]=INF[r*3+c],v=info[id];
@@ -294,7 +329,6 @@ function buildSheet(){
  h+='<div class="foot">با آرزوی موفقیت 🌱 — '+(info.teacher?('دبیر: '+esc(info.teacher)):'آزمون‌ساز')+'</div>';
  $('sheet').innerHTML=h;return total;}
 
-/* ---------- خروجی‌ها ---------- */
 function openModal(){buildSheet();$('modal').classList.add('open');}
 function closeModal(){$('modal').classList.remove('open');}
 function exportPDF(){
@@ -338,15 +372,17 @@ function printSheet(){
   }
 }
 
-/* ---------- شروع ---------- */
 window.addEventListener('DOMContentLoaded',()=>{
  INF.forEach(([id,lbl])=>$('info-grid').insertAdjacentHTML('beforeend',
   `<div><label class="fld">${lbl}</label><input id="i_${id}"></div>`));
- ORDER.forEach(t=>$('b-type').insertAdjacentHTML('beforeend',
-  `<option value="${t}">${TYPES[t].icon} ${TYPES[t].name}</option>`));
+ Object.keys(MODES).forEach(m=>$('b-mode').insertAdjacentHTML('beforeend',
+  `<option value="${m}">${MODES[m].icon} ${MODES[m].name}</option>`));
  for(let i=1;i<=40;i++){const s=i/4,o=document.createElement('option');
   o.value=s;o.textContent=fmt(s)+' نمره';if(s===1)o.selected=true;$('b-score').appendChild(o);}
- load();setBuilder();renderList();
+ load();
+ curMode=$('b-mode').value;
+ $('b-type').innerHTML=typeOpts();
+ setBuilder();renderList();
  document.querySelectorAll('#info-grid input').forEach(i=>i.addEventListener('input',save));});
 </script>
 </body>
